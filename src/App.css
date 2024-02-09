@@ -1,0 +1,73 @@
+html,
+body,
+:root{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+}
+
+.bg-grad{
+  background-image: linear-gradient(to right top, #9eabbe, #aaa8bd, #b6a4b7, #bfa2ad, #c3a2a2);
+}
+
+.blob{
+  border-radius: 30% 70% 46% 54% / 50% 20% 80% 50% ;
+}
+
+.blob-animation{
+  animation: blob-anim infinite 3.5s;
+}
+
+@keyframes blob-anim {
+  0%{
+    border-radius: 30% 70% 46% 54% / 50% 20% 80% 50% ;
+  }
+  50%{
+    border-radius: 41% 24% 62% 25% / 36% 26% 49% 45% ;
+  }
+  75%{
+    border-radius: 29% 44% 50% 25% / 69% 53% 13% 45% ;
+  }
+  100%{
+    border-radius: 30% 70% 46% 54% / 50% 20% 80% 50% ;
+  }
+}
+
+.spinner-anim{
+  animation: spinner-animation infinite ease-in-out 2s;
+}
+
+@keyframes spinner-animation {
+  0%{
+    rotate: 0deg;
+    border-bottom-color: #ba6969;
+    border-top-color: #ba6969;
+  }
+  50%{
+    border-bottom-color: #9eabbe;
+    border-top-color: #9eabbe;
+  }
+  100%{
+    rotate: 360deg;
+  }
+
+}
+
+.logo-anim{
+   animation: logo-animation infinite ease-in-out 2s;
+}
+
+@keyframes logo-animation {
+  0%{
+    color: #ba6969;
+  }
+  50%{
+    color: #9eabbe
+  }
+  100%{
+  }
+}
