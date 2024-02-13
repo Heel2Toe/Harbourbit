@@ -8,6 +8,7 @@ import Spinner from './components/ui/spinner'
 import { useSpinner } from './hooks/use-spinner'
 import { AnimatePresence } from 'framer-motion'
 import NewEntry from './components/new-entry'
+import UserSettings from './components/user-settings'
 
 
 
@@ -26,7 +27,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Auth/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='//newEntry' element={<NewEntry/>}/>
+        <Route path='/newEntry' element={<NewEntry/>}/>
+        <Route path='/settings' element={<UserSettings/>}/>
       </Routes>
       </Router>
     </div>

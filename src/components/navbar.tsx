@@ -49,12 +49,12 @@ const Navbar = () => {
         name: "New entry",
     },
     {
-        path: `/chatroom`,
-        name: "Chat room",
-    },
-    {
       path: `/settings`,
       name: "Settings",
+    },
+    {
+        path: `/chatroom`,
+        name: "Chat room",
     },
 ];
 

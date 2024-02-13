@@ -8,6 +8,7 @@ import { useSpinner } from "../hooks/use-spinner";
 import { handleJwt } from "../utils/handle-jwt";
 import { useNavigate } from "react-router-dom";
 import { useReload } from "../hooks/trigger-reload";
+import { MdDelete } from "react-icons/md";
 
 interface SingleJournalProps {
   journal: JournalProps
@@ -89,7 +90,7 @@ const SingleJournal: React.FC<SingleJournalProps> = ({
         <div className="w-full">
           <div className="w-full mt-10 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <h1 className=" font-extrabold text-3xl">{journal.title}</h1>
+              <h1 className=" font-extrabold text-xl">{journal.title}</h1>
               <div className="mt-1 border text-xs rounded-xl px-2">
                 {journal.mode ? "public" : "private"}
               </div>
@@ -102,7 +103,8 @@ const SingleJournal: React.FC<SingleJournalProps> = ({
           onClick={()=>onDelete(journal.journalId)}
           className="mt-5 self-end text-sm p-1 border rounded-md
                       hover:bg-red-500 duration-500">
-          delete</button>
+           <MdDelete className="text-xl"/>
+          </button>
 
           </div>
         </div>
