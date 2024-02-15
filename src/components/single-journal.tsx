@@ -8,56 +8,53 @@ import { useSpinner } from "../hooks/use-spinner";
 import { handleJwt } from "../utils/handle-jwt";
 import { useNavigate } from "react-router-dom";
 import { useReload } from "../hooks/trigger-reload";
-import { MdDelete } from "react-icons/md";
+import DeleteButton from "./ui/delete-button";
 
 interface SingleJournalProps {
-  journal: JournalProps
+  journal: JournalProps;
 }
 
-const SingleJournal: React.FC<SingleJournalProps> = ({
-  journal
-}) => {
-  const {accessToken, refreshToken, logoutUser, updateUser} = useUser();
-  const {triggerReload} = useReload();
+const SingleJournal: React.FC<SingleJournalProps> = ({ journal }) => {
+  const { accessToken, refreshToken, logoutUser, updateUser } = useUser();
+  const { triggerReload } = useReload();
   const navigate = useNavigate();
-  const {setSpinner} = useSpinner();
+  const { setSpinner } = useSpinner();
 
-  const onDelete = async (journalId : String) => {
-    if(!journalId) return;
-    try{   
-        await axios.delete(`${import.meta.env.VITE_BASE_URL}/journal/deleteJournal/${journalId}`,{
+  const onDelete = async (journalId: String) => {
+    if (!journalId) return;
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/journal/deleteJournal/${journalId}`,
+        {
           headers: {
-          'x-access-token' : accessToken
-          }
-        });
-        toast.success('Entry deleted !');
-        triggerReload();
-        journal.title = '';
-      }
-      catch (error: any) {
-        if(error.response.data == 'Token Expired'){
-          const result = await handleJwt(refreshToken);
-           if(result){
-             updateUser({accessToken: result});
-           }
-           else{
-            logoutUser();
-            navigate('/');
-           }
+            "x-access-token": accessToken,
+          },
         }
-        else if(error.response.data == 'Invalid Token'){
+      );
+      toast.success("Entry deleted !");
+      triggerReload();
+      journal.title = "";
+    } catch (error: any) {
+      if (error.response.data == "Token Expired") {
+        const result = await handleJwt(refreshToken);
+        if (result) {
+          updateUser({ accessToken: result });
+        } else {
           logoutUser();
-          navigate('/');
-          toast.error('Unauthorized');
+          navigate("/");
         }
-        else{
-          toast.error('Internal server error');
-          console.log('Error at single-journal.tsx \n:',error);
-        }
-      } finally {
-        setSpinner(false);
+      } else if (error.response.data == "Invalid Token") {
+        logoutUser();
+        navigate("/");
+        toast.error("Unauthorized");
+      } else {
+        toast.error("Internal server error");
+        console.log("Error at single-journal.tsx \n:", error);
       }
+    } finally {
+      setSpinner(false);
     }
+  };
 
   return (
     <motion.div
@@ -95,17 +92,16 @@ const SingleJournal: React.FC<SingleJournalProps> = ({
                 {journal.mode ? "public" : "private"}
               </div>
             </div>
-            <p className="text-sm font-thin">{dateFormatter(journal.createdAt)}</p>
+            <p className="text-sm font-thin">
+              {dateFormatter(journal.createdAt)}
+            </p>
           </div>
           <div className="flex flex-col">
-          <p className="mt-4">{journal.content}</p>
-          <button 
-          onClick={()=>onDelete(journal.journalId)}
-          className="mt-5 self-end text-sm p-1 border rounded-md
-                      hover:bg-red-500 duration-500">
-           <MdDelete className="text-xl"/>
-          </button>
+            <p className="mt-4">{journal.content}</p>
 
+            <div className="self-end mt-5">
+              <DeleteButton onClick={() => onDelete(journal.journalId)} />
+            </div>
           </div>
         </div>
       )}

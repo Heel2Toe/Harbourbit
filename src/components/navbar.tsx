@@ -49,12 +49,8 @@ const Navbar = () => {
         name: "New entry",
     },
     {
-      path: `/settings`,
-      name: "Settings",
-    },
-    {
-        path: `/chatroom`,
-        name: "Chat room",
+      path: `/account`,
+      name: "Account",
     },
 ];
 
