@@ -1,4 +1,3 @@
-import { MdDelete } from "react-icons/md";
 import DeleteButton from "./ui/delete-button";
 
 interface Props{
