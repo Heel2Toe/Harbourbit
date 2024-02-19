@@ -4,7 +4,7 @@ import { useUser } from "../hooks/use-user";
 import toast from "react-hot-toast";
 import NavItem from "./ui/nav-item";
 import axios from "axios";
-import { useSpinner } from "../hooks/use-spinner";
+import { useLoading } from "../hooks/use-loader";
 
 const Navbar = () => {
   let currentPath = window.location.pathname || "/";
@@ -12,7 +12,7 @@ const Navbar = () => {
   
   const [hover, setHover] = useState(currentPath);
   const {userId, logoutUser} = useUser();
-  const {setSpinner} = useSpinner();
+  const {setLoading} = useLoading();
   const navigate = useNavigate();
 
  useEffect(()=>{  
@@ -24,7 +24,7 @@ const Navbar = () => {
 
  const logout = async () => {
   try {
-    setSpinner(true)
+    setLoading({spinner: true});
     if (userId) {
       await axios.get(`${import.meta.env.VITE_BASE_URL}/user/logout/${userId}`);
     }
@@ -35,9 +35,16 @@ const Navbar = () => {
     console.log('Error [dash.tsx] : \n',error);
   }
   finally{
-    setSpinner(false)
+    setLoading({spinner: false});
   }
 };
+
+const chatRoom = () => {
+  setLoading({loadingPage: true});
+  setTimeout(()=>{
+    navigate('/chatroom');
+  },1000)
+}
 
   const navItems = [
     {
@@ -73,6 +80,16 @@ const Navbar = () => {
             />     
           ))}
            
+           <NavItem
+              key={'chatroom'}
+              path={'/chatroom'}
+              name='Chatroom'
+              hover={hover}
+              onMouseOver={() => setHover('/chatroom')}
+              onMouseLeave={() => setHover(currentPath)}
+              onClick={()=>chatRoom()}
+            />  
+
            <NavItem
               key={'logout'}
               path={'/logout'}

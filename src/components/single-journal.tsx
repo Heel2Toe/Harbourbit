@@ -4,11 +4,11 @@ import dateFormatter from "../utils/date-formatter";
 import axios from "axios";
 import { useUser } from "../hooks/use-user";
 import toast from "react-hot-toast";
-import { useSpinner } from "../hooks/use-spinner";
-import { handleJwt } from "../utils/handle-jwt";
+import { useLoading } from "../hooks/use-loader";
 import { useNavigate } from "react-router-dom";
 import { useReload } from "../hooks/trigger-reload";
 import DeleteButton from "./ui/delete-button";
+import handleError from "../utils/handle-error";
 
 interface SingleJournalProps {
   journal: JournalProps;
@@ -18,11 +18,12 @@ const SingleJournal: React.FC<SingleJournalProps> = ({ journal }) => {
   const { accessToken, refreshToken, logoutUser, updateUser } = useUser();
   const { triggerReload } = useReload();
   const navigate = useNavigate();
-  const { setSpinner } = useSpinner();
+  const { setLoading } = useLoading();
 
   const onDelete = async (journalId: String) => {
     if (!journalId) return;
     try {
+      setLoading({ spinner: true });
       await axios.delete(
         `${import.meta.env.VITE_BASE_URL}/journal/deleteJournal/${journalId}`,
         {
@@ -35,24 +36,9 @@ const SingleJournal: React.FC<SingleJournalProps> = ({ journal }) => {
       triggerReload();
       journal.title = "";
     } catch (error: any) {
-      if (error.response.data == "Token Expired") {
-        const result = await handleJwt(refreshToken);
-        if (result) {
-          updateUser({ accessToken: result });
-        } else {
-          logoutUser();
-          navigate("/");
-        }
-      } else if (error.response.data == "Invalid Token") {
-        logoutUser();
-        navigate("/");
-        toast.error("Unauthorized");
-      } else {
-        toast.error("Internal server error");
-        console.log("Error at single-journal.tsx \n:", error);
-      }
+      handleError(error, logoutUser, updateUser, navigate, refreshToken!);
     } finally {
-      setSpinner(false);
+      setLoading({ spinner: false });
     }
   };
 

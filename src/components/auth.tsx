@@ -1,132 +1,71 @@
-import { AnimatePresence } from "framer-motion";
-import Blob from "./ui/blob";
-import TextBox from "./ui/text-box";
 import { useState } from "react";
-import Button from "./ui/button";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../hooks/use-user";
+import SigninCard from "./signin-card";
+import { motion } from "framer-motion";
+import LinksVisit from "./ui/links-visit";
 
 const Auth = () => {
-  const [login, setLogin] = useState(true);
-  const [blob, setBlob] = useState({loading: false, success: false});
-  const { updateUser } = useUser();
-  const navigate = useNavigate();
+  const [card, setCard] = useState(false);
 
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-    rePassword: "",
-  });
-
-  const handleInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const textboxName = e.target.name;
-    setUser((prev) => ({
-      ...prev,
-      [textboxName]: e.target.value,
-    }));
-  };
-
-  const userAuth = async () => {
-    try {
-      setBlob((prev) => ({ ...prev, loading: true }));
-
-      if (login) {
-        if(!user.username || !user.password){
-          toast.error("Enter all details");
-          return;
-        }
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/signin`, {
-          username: user.username,
-          password: user.password,
-        });
-
-        updateUser({
-          userId: response.data.userId,
-          username: user.username,
-          refreshToken: response.data.refreshToken,
-          accessToken: response.data.accessToken,
-        });
-
-        setBlob((prev) => ({ ...prev, success: true }));
-  
-        setTimeout(() => {
-          navigate(`/dashboard`);
-        }, 600);
-  
-
-      } else {
-        if(!user.username || !user.password || !user.rePassword){
-          toast.error("Enter all details");
-          return;
-        }
-        if (user.password !== user.rePassword) {
-          toast.error("Password mismatch");
-          return;
-        }
-
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/signup`, {
-          username: user.username,
-          password: user.password,
-        });
-  
-        updateUser({
-          userId: response.data.userId,
-          username: user.username,
-          refreshToken: response.data.refreshToken,
-          accessToken: response.data.accessToken,
-        });
-  
-        setBlob((prev) => ({ ...prev, success: true }));
-  
-        setTimeout(() => {
-          navigate(`/dashboard`);
-
-        }, 600);
-      }
-    } catch (err: any) {
-      toast.error(err.response?.data || "Something went wrong");
-      console.error(err);
-    } finally {
-      setBlob((prev) => ({ ...prev, loading: false }));
+  const handleClick = (e: any) => {
+    if (e.target.id == "close-area") {
+      setCard(false);
     }
   };
 
   return (
-    <div className="h-full bg-grad flex justify-between items-center p-10">
-      <Blob loading={blob.loading} success={blob.success}/>
+    <div
+      onClick={handleClick}
+      className="relative h-full w-full text-white bg-[#924e4e] flex flex-col items-center p-10 "
+    >
+      <div className="w-full flex justify-between">
+        <motion.div 
+        key={1}
+        initial={{x:-75, opacity: 0}}
+        animate={{x:0, opacity: 1}}
+        transition={{ duration: 0.5, delay: 0.25 }}
+        className="mt-10 w-[40%]">
+          Welcome to Harbourbit, the ultimate destination for journaling
+          enthusiasts. Our platform offers a seamless experience for documenting
+          your thoughts and experiences. With the added feature of sentiment
+          analysis, gain valuable insights into the emotions behind your
+          entries. Join our community today to start your journey of
+          self-discovery and personal growth through the power of journaling.
+        </motion.div>
+        <motion.h1
+          key={2}
+          initial={{ y: 75, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="text-8xl self-end mt-10 font-extrabold  h-24"
+        >
+          Harbourbit.
+        </motion.h1>
 
-      <div className="relative h-96 w-[500px] rounded-md flex flex-col items-center bg-[#928181] shadow-lg mr-10 p-5 space-y-4">
-        <h1 className="text-gray-300 text-5xl font-extrabold">
-          {login ? "Sign in." : "Get Started."}
-        </h1>
-        <Button 
-          mode="primary" text={login ? 'new user ?' : 'current user ?'} 
-          className="absolute right-0 bottom-0 rounded-none rounded-br-md rounded-tl-md p-1"
-          onClick={()=>setLogin(!login)}
-          />
-        <TextBox name="username" placeholder="username" type="text" onChange={handleInput} />
-        <TextBox name="password" placeholder="password" type="password" onChange={handleInput} />
-
-        <AnimatePresence>
-          {!login && (
-            <TextBox
-              key={1}
-              name="rePassword"
-              placeholder="re enter password"
-              type="password"
-              onChange={handleInput}
-            />
-          )}
-          <Button
-            onClick={() => userAuth()}
-            mode="secondary"
-            text={login ? "Sign in" : "Sign up"}
-            key={2}
-          />
-        </AnimatePresence>
+        <div className="fixed top-2 right-5 h-80 w-96 -z-4 border border-white" />
       </div>
+
+      <div className="mt-10 self-start bg-white rounded-md">
+        <button
+          className="p-4 rounded-md border bg-[#924e4e] hover:translate-x-1 hover:-translate-y-1 duration-500"
+          onClick={() => setCard(true)}
+        >
+          Get Started !
+        </button>
+      </div>
+      
+      <div className="w-full mt-20 flex justify-between items-center overflow-hidden">
+
+      <LinksVisit/>
+
+      <motion.div 
+      initial={{ x: 45, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.25 }}
+      className="border text-xs rounded-md w-64 p-5 flex items-center justify-center font-bold">
+       <p>Made by Niranjan P.N</p> 
+      </motion.div>
+      </div>
+      {card && <SigninCard />}
     </div>
   );
 };

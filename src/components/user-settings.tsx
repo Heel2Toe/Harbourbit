@@ -4,14 +4,14 @@ import { useUser } from "../hooks/use-user";
 import UserIdCopy from "./ui/user-id-copy";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useSpinner } from "../hooks/use-spinner";
+import { useLoading } from "../hooks/use-loader";
 import axios from "axios";
-import { handleJwt } from "../utils/handle-jwt";
 import { useEffect, useState } from "react";
 import PieUi from "./pie-ui";
 import JournalStats from "./journal-stats";
 import SettingsActions from "./settings-actions";
 import UserStreak from "./user-streak";
+import handleError from "../utils/handle-error";
 
 export interface PieDataProps {
   name: string;
@@ -28,7 +28,11 @@ const UserSettings = () => {
     updateUser,
   } = useUser();
 
-  const [stats, setStats] = useState({ monthTotal: 0, lifeTotal: 0, streak:0 });
+  const [stats, setStats] = useState({
+    monthTotal: 0,
+    lifeTotal: 0,
+    streak: 0,
+  });
   const [pieData, setPieData] = useState<PieDataProps[]>([
     { name: "Positive", value: 0 },
     { name: "Negative", value: 0 },
@@ -36,7 +40,7 @@ const UserSettings = () => {
   ]);
 
   const navigate = useNavigate();
-  const { setSpinner } = useSpinner();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     const getStats = async () => {
@@ -44,7 +48,7 @@ const UserSettings = () => {
         return;
       }
       try {
-        setSpinner(true);
+        setLoading({ spinner: true });
         const result = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/journal/getStats/${userId}`,
           {
@@ -56,28 +60,13 @@ const UserSettings = () => {
         setStats({
           monthTotal: result.data.monthTotal,
           lifeTotal: result.data.lifeTotal,
-          streak: result.data.streak
+          streak: result.data.streak,
         });
         setPieData(result.data.pieData);
       } catch (error: any) {
-        if (error.response.data == "Token Expired") {
-          const result = await handleJwt(refreshToken);
-          if (result) {
-            updateUser({ accessToken: result });
-          } else {
-            logoutUser();
-            navigate("/");
-          }
-        } else if (error.response.data == "Invalid Token") {
-          logoutUser();
-          navigate("/");
-          toast.error("Unauthorized");
-        } else {
-          toast.error("Internal server error");
-          console.log("Error at dashboard.tsx \n:", error);
-        }
+        handleError(error, logoutUser, updateUser, navigate, refreshToken!);
       } finally {
-        setSpinner(false);
+        setLoading({ spinner: false });
       }
     };
 
@@ -91,7 +80,7 @@ const UserSettings = () => {
       return;
     }
     try {
-      setSpinner(true);
+      setLoading({ spinner: true });
       await axios.delete(
         `${import.meta.env.VITE_BASE_URL}/user/deleteUser/${userId}`,
         {
@@ -104,24 +93,9 @@ const UserSettings = () => {
       logoutUser();
       navigate("/");
     } catch (error: any) {
-      if (error.response.data == "Token Expired") {
-        const result = await handleJwt(refreshToken);
-        if (result) {
-          updateUser({ accessToken: result });
-        } else {
-          logoutUser();
-          navigate("/");
-        }
-      } else if (error.response.data == "Invalid Token") {
-        logoutUser();
-        navigate("/");
-        toast.error("Unauthorized");
-      } else {
-        toast.error("Internal server error");
-        console.log("Error at dashboard.tsx \n:", error);
-      }
+      handleError(error, logoutUser, updateUser, navigate, refreshToken!);
     } finally {
-      setSpinner(false);
+      setLoading({ spinner: false });
     }
   };
 
@@ -132,6 +106,7 @@ const UserSettings = () => {
       return;
     }
     try {
+      setLoading({ spinner: true });
       await axios.delete(
         `${import.meta.env.VITE_BASE_URL}/journal/deleteJournals/${userId}`,
         {
@@ -143,24 +118,9 @@ const UserSettings = () => {
       navigate("/dashboard");
       toast.success("A clean slate :D");
     } catch (error: any) {
-      if (error.response.data == "Token Expired") {
-        const result = await handleJwt(refreshToken);
-        if (result) {
-          updateUser({ accessToken: result });
-        } else {
-          logoutUser();
-          navigate("/");
-        }
-      } else if (error.response.data == "Invalid Token") {
-        logoutUser();
-        navigate("/");
-        toast.error("Unauthorized");
-      } else {
-        toast.error("Internal server error");
-        console.log("Error at dashboard.tsx \n:", error);
-      }
+      handleError(error, logoutUser, updateUser, navigate, refreshToken!);
     } finally {
-      setSpinner(false);
+      setLoading({ spinner: false });
     }
   };
 
@@ -208,7 +168,7 @@ const UserSettings = () => {
               <div className="h-[95%] p-4 w-full flex flex-col items-center rounded-xl border">
                 <h1 className="font-extrabold text-2xl mb-3">Statistics</h1>
                 <div className="w-full flex justify-between items-start p-4">
-                  <UserStreak streak={stats.streak}/>
+                  <UserStreak streak={stats.streak} />
                   <PieUi pieData={pieData} />
                 </div>
               </div>
