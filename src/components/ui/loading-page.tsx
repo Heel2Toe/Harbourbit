@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { IoChatbox } from "react-icons/io5";
-import { useLoading } from "../../hooks/use-loader";
 
 const LoadingPage = () => {
     
