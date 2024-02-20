@@ -8,6 +8,7 @@ const Auth = () => {
 
   return (
     <div className="relative h-full w-full text-white bg-[#924e4e] flex flex-col items-center p-10">
+      
       <div className="w-full flex justify-between">
         <motion.div 
         key={1}
@@ -22,6 +23,7 @@ const Auth = () => {
           entries. Join our community today to start your journey of
           self-discovery and personal growth through the power of journaling.
         </motion.div>
+
         <motion.h1
           key={2}
           initial={{ y: 75, opacity: 0 }}
@@ -31,8 +33,8 @@ const Auth = () => {
         >
           Harbourbit.
         </motion.h1>
-
         <div className="fixed top-2 right-5 h-80 w-96 -z-4 border border-white" />
+
       </div>
 
       <div className="mt-10 self-start bg-white rounded-md">
@@ -53,7 +55,7 @@ const Auth = () => {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.25 }}
       className="border text-xs rounded-md w-64 p-5 flex items-center justify-center font-bold">
-       <p>Made by Niranjan P.N</p> 
+       <p>Made with ❤️ by Niranjan P.N</p> 
       </motion.div>
       </div>
       {card && <AnimatePresence>
