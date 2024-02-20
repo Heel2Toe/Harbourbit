@@ -1,22 +1,13 @@
 import { useState } from "react";
 import SigninCard from "./signin-card";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import LinksVisit from "./ui/links-visit";
 
 const Auth = () => {
   const [card, setCard] = useState(false);
 
-  const handleClick = (e: any) => {
-    if (e.target.id == "close-area") {
-      setCard(false);
-    }
-  };
-
   return (
-    <div
-      onClick={handleClick}
-      className="relative h-full w-full text-white bg-[#924e4e] flex flex-col items-center p-10 "
-    >
+    <div className="relative h-full w-full text-white bg-[#924e4e] flex flex-col items-center p-10">
       <div className="w-full flex justify-between">
         <motion.div 
         key={1}
@@ -65,7 +56,9 @@ const Auth = () => {
        <p>Made by Niranjan P.N</p> 
       </motion.div>
       </div>
-      {card && <SigninCard />}
+      {card && <AnimatePresence>
+                 <SigninCard onClose={()=>setCard(false)}/>
+               </AnimatePresence>}
     </div>
   );
 };
