@@ -39,12 +39,12 @@ const Navbar = () => {
   }
 };
 
-const chatRoom = () => {
-  setLoading({loadingPage: true});
-  setTimeout(()=>{
-    navigate('/chatroom');
-  },1000)
-}
+// const chatRoom = () => {
+//   setLoading({loadingPage: true});
+//   setTimeout(()=>{
+//     navigate('/chatroom');
+//   },1000)
+// }
 
   const navItems = [
     {
@@ -80,7 +80,7 @@ const chatRoom = () => {
             />     
           ))}
            
-           <NavItem
+           {/* <NavItem
               key={'chatroom'}
               path={'/chatroom'}
               name='Chatroom'
@@ -88,7 +88,7 @@ const chatRoom = () => {
               onMouseOver={() => setHover('/chatroom')}
               onMouseLeave={() => setHover(currentPath)}
               onClick={()=>chatRoom()}
-            />  
+            />   */}
 
            <NavItem
               key={'logout'}
