@@ -1,4 +1,4 @@
-#Harbourbit
+# Harbourbit
 
 A journaling web application with features such as sentiment analysis chart, streak counter, and calendar tracking. 
 
